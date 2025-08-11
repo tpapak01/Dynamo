@@ -1,4 +1,4 @@
-﻿namespace Areas.Identity.Middleware;
+﻿namespace Dynamo.Business.Middleware;
 
 public class ApiKeyAuthMiddleware(RequestDelegate next, IConfiguration configuration)
 {

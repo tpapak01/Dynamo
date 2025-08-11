@@ -1,11 +1,11 @@
-﻿using Dynamo.Data;
+﻿using Dynamo.Business.Data;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.ComponentModel;
 using System.Text;
 using System.Timers;
 
-namespace Areas.Identity.Models;
+namespace Dynamo.Business.Models;
 
 
 public class MyWorker
@@ -15,7 +15,7 @@ public class MyWorker
     private static BackgroundWorker worker;
 
     private readonly DynamoContext db;
-    public MyWorker (DynamoContext dbcontext)
+    public MyWorker(DynamoContext dbcontext)
     {
         db = dbcontext;
         using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());

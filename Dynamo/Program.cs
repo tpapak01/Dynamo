@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using Dynamo.Data;
-using Areas.Identity.Middleware;
 using Microsoft.OpenApi.Models;
 using FluentValidation;
-using Areas.Identity.Validator;
-using Areas.Identity.Models;
+using Dynamo.Business.Data;
+using Dynamo.Business.Middleware;
+using Dynamo.Business.Models;
+using Dynamo.Business.Validator;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DynamoContextConnection") ?? throw new InvalidOperationException("Connection string 'DynamoContextConnection' not found.");

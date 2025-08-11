@@ -1,11 +1,11 @@
-﻿using Dynamo.Data;
+﻿using Dynamo.Business.Data;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
-namespace Areas.Identity.Models
+namespace Dynamo.Business.Models
 {
     public class MyAPIs
     {
@@ -74,7 +74,7 @@ namespace Areas.Identity.Models
 
             app.MapGet(url, async ([FromServices] DynamoContext db) =>
             {
-                List<EnergyPredictionBody> energyPredictionBodyList = new List<EnergyPredictionBody> ();
+                List<EnergyPredictionBody> energyPredictionBodyList = new List<EnergyPredictionBody>();
                 List<Houses> houses = await db.Houses
                          .AsNoTracking() //fast fast
                          .ToListAsync();
@@ -90,7 +90,7 @@ namespace Areas.Identity.Models
                         .Where(ha => ha.houseId == house.id && ha.ElectiAlias != null)
                         .AsNoTracking() //fast fast
                         .ToListAsync();
-                    String electiAlias = houseAliases.FirstOrDefault().ElectiAlias;
+                    string electiAlias = houseAliases.FirstOrDefault().ElectiAlias;
 
                     foreach (EnergyPredictions prediction in housePredictions)
                     {

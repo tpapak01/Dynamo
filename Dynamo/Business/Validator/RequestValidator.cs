@@ -1,7 +1,7 @@
-﻿using Areas.Identity.Models;
+﻿using Dynamo.Business.Models;
 using FluentValidation;
 
-namespace Areas.Identity.Validator;
+namespace Dynamo.Business.Validator;
 
 public class RequestValidator : AbstractValidator<List<EnergyDataBody>>
 {

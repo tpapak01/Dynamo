@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Dynamo.Data;
+namespace Dynamo.Business.Data;
 
 public class DynamoContext : DbContext
 {
@@ -27,5 +27,5 @@ public class DynamoContext : DbContext
         //builder.Entity<Blog>().Property(b => b.Url).IsRequired();
 
     }
-    
+
 }
