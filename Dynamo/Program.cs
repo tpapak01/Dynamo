@@ -78,6 +78,9 @@ MyAPIs.ReceiveEnergyMeasurements(app, "/energydata");
 MyAPIs.SendEnergyPredictions(app, "/energypredictions");
 
 // POST REQUEST EVERY 15 MIN TO ELECTI
-//new MyWorker(dbcontext);
+//new SendEnergyMeasurementsWorker(dbcontext);
+
+// CREATE FILES FOR PREDICTION ALGORITHM EVERY X MINUTES, AND RUN ALGORITHM
+//new CreateInputForPredictionsAlgWorker(dbcontext, builder.Environment);
 
 app.Run();

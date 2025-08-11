@@ -8,14 +8,14 @@ using System.Timers;
 namespace Dynamo.Business.Models;
 
 
-public class MyWorker
+public class SendEnergyMeasurementsWorker
 {
     private static ILogger logger;
 
     private static BackgroundWorker worker;
 
     private readonly DynamoContext db;
-    public MyWorker(DynamoContext dbcontext)
+    public SendEnergyMeasurementsWorker(DynamoContext dbcontext)
     {
         db = dbcontext;
         using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
@@ -36,21 +36,21 @@ public class MyWorker
 
     async void worker_DoWork(object sender, DoWorkEventArgs e)
     {
-        logger.LogInformation("Hmmm...");
+        //logger.LogInformation("Hmmm...");
         HttpClient httpClient = new HttpClient();
         httpClient.DefaultRequestHeaders.Add("x-api-key", "AAA");
         httpClient.BaseAddress = new Uri("https://localhost:7227/");
         List<EnergyDataBody> model = new List<EnergyDataBody>();
 
         List<HouseAliases> houseAliases = await db.HouseAliases
-                            .AsNoTracking() //fast fast
+                            .AsNoTracking()
                             .ToListAsync();
         foreach (HouseAliases houseAlias in houseAliases)
         {
             List<EnergyMeasurements> measurements = await db.EnergyMeasurements
                             .Where(m => m.houseId == houseAlias.houseId)
                             .OrderByDescending(x => x.measurementDatetime)
-                            .AsNoTracking() //fast fast
+                            .AsNoTracking()
                             .ToListAsync();
             EnergyMeasurements measure = measurements.FirstOrDefault();
             if (measure != null)
@@ -67,7 +67,6 @@ public class MyWorker
 
         logger.LogInformation(model[0].measurementDatetime.ToString());
         var stringContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
-        //var response = await httpClient.GetAsync("/weatherforecast");
         var response = await httpClient.PostAsync("/energydata", stringContent);
 
     }
