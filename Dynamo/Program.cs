@@ -83,4 +83,7 @@ MyAPIs.SendEnergyPredictions(app, "/energypredictions");
 // CREATE FILES FOR PREDICTION ALGORITHM EVERY X MINUTES, AND RUN ALGORITHM
 //new CreateInputForPredictionsAlgWorker(dbcontext, builder.Environment);
 
+// READ FROM PREDICTION ALGORITHM FILES
+//new ReadFromPredictionsAlgWorker(dbcontext, builder.Environment);
+
 app.Run();

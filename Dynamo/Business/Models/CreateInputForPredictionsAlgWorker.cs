@@ -61,13 +61,12 @@ public class CreateInputForPredictionsAlgWorker
 
         foreach (Houses house in houses)
         {
-            /*
+            
             List<HouseAliases> houseAliases = await db.HouseAliases
-                            .Where(ha => ha.houseId == house.id && ha.ElectiAlias != null)
+                            .Where(ha => ha.houseId == house.id && ha.MeasurementsAlias != null)
                             .AsNoTracking()
                             .ToListAsync();
-            string electiAlias = houseAliases.FirstOrDefault().ElectiAlias;
-            */
+            string measurementsAlias = houseAliases.FirstOrDefault().MeasurementsAlias;
 
             // Get all measurements for house, for today
             List<EnergyMeasurements> measurements = await db.EnergyMeasurements
@@ -83,7 +82,7 @@ public class CreateInputForPredictionsAlgWorker
                     {
                         consumption = measure.consumption,
                         production = measure.production,
-                        houseId = house.id.ToString(),
+                        houseId = measurementsAlias,
                         measurementDatetime = measure.measurementDatetime,
                     });
                 }
@@ -92,7 +91,6 @@ public class CreateInputForPredictionsAlgWorker
 
         // PART 2 - FILL UP CSV AND SAVE
         FileStream fileStream = new FileStream($"{path}/data/RE.csv", FileMode.Create);
-        //using (StreamWriter sw = new StreamWriter(path, false, new UTF8Encoding(true)))
         using (StreamWriter sw = new StreamWriter(fileStream))
         using (CsvWriter cw = new CsvWriter(sw, CultureInfo.InvariantCulture))
         {
