@@ -8,6 +8,8 @@ using CsvHelper;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using System.Globalization;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using System.Diagnostics;
 
 namespace Dynamo.Business.Models;
 
@@ -102,6 +104,24 @@ public class CreateInputForPredictionsAlgWorker
                 cw.NextRecord();
             }
         }
+
+        // PART 3 - CALL PREDICTIONS SCRIPT
+        ProcessStartInfo processInfo;
+        Process process = new Process();
+
+        processInfo = new ProcessStartInfo();
+        //processInfo = new ProcessStartInfo("java"); // or /c /k
+        //processInfo = new ProcessStartInfo($"{originPath}/hello.bat"); // or /c
+        processInfo.CreateNoWindow = false;
+        processInfo.UseShellExecute = true;
+        //processInfo.Arguments = Command;
+        //ProcessInfo.RedirectStandardOutput = true;
+        processInfo.FileName = "cmd.exe";
+        processInfo.Arguments = $"/k {originPath}/hello.bat";
+
+        process.StartInfo = processInfo;
+        process.Start();
+        process.WaitForExit();
     }
 
 }
