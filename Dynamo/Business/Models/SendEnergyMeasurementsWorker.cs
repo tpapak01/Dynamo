@@ -42,13 +42,20 @@ public class SendEnergyMeasurementsWorker
         httpClient.BaseAddress = new Uri("https://localhost:7227/");
         List<EnergyDataBody> model = new List<EnergyDataBody>();
 
-        List<HouseAliases> houseAliases = await db.HouseAliases
+        List<Houses> houses = await db.Houses
                             .AsNoTracking()
                             .ToListAsync();
-        foreach (HouseAliases houseAlias in houseAliases)
+        
+        foreach (Houses house in houses)
         {
+            List<HouseAliases> houseAliases = await db.HouseAliases
+                            .Where(ha => ha.houseId == house.id && ha.ElectiAlias != null)
+                            .AsNoTracking()
+                            .ToListAsync();
+            string electiAlias = houseAliases.FirstOrDefault().ElectiAlias;
+
             List<EnergyMeasurements> measurements = await db.EnergyMeasurements
-                            .Where(m => m.houseId == houseAlias.houseId)
+                            .Where(m => m.houseId == house.id)
                             .OrderByDescending(x => x.measurementDatetime)
                             .AsNoTracking()
                             .ToListAsync();
@@ -59,7 +66,7 @@ public class SendEnergyMeasurementsWorker
                 {
                     consumption = measure.consumption,
                     production = measure.production,
-                    houseIdentifier = houseAlias.MeasurementsAlias,
+                    houseIdentifier = electiAlias,
                     measurementDatetime = measure.measurementDatetime,
                 });
             }

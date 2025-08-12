@@ -80,20 +80,28 @@ namespace Dynamo.Business.Models
                          .ToListAsync();
                 foreach (Houses house in houses)
                 {
+                    // Get predictions for next day / tomorrow
                     List<EnergyPredictions> housePredictions = await db.EnergyPredictions
-                         .Where(e => e.houseId == house.id && e.predictionDatetime.DayOfYear == DateTime.Today.DayOfYear)
-                         .OrderByDescending(x => x.predictionDatetime)
-                         .AsNoTracking() //fast fast
+                         .Where(e => e.houseId == house.id && e.predictionDatetime.DayOfYear == DateTime.Today.DayOfYear + 1)
+                         .OrderBy(x => x.predictionDatetime)
+                         .AsNoTracking()
                          .ToListAsync();
 
+                    // Get Electi alias
                     List<HouseAliases> houseAliases = await db.HouseAliases
                         .Where(ha => ha.houseId == house.id && ha.ElectiAlias != null)
-                        .AsNoTracking() //fast fast
+                        .AsNoTracking()
                         .ToListAsync();
                     string electiAlias = houseAliases.FirstOrDefault().ElectiAlias;
 
+                    int lastRegisteredHour = -1;
                     foreach (EnergyPredictions prediction in housePredictions)
                     {
+                        if (prediction.predictionDatetime.Hour == lastRegisteredHour)
+                        {
+                            continue;
+                        }
+                        lastRegisteredHour = prediction.predictionDatetime.Hour;
                         EnergyPredictionBody energyPredictionBody = new EnergyPredictionBody();
                         energyPredictionBody.forecasted_pv = prediction.production;
                         energyPredictionBody.forecasted_load_consumption = prediction.consumption;

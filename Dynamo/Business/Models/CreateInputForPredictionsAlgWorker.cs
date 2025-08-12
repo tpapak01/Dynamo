@@ -36,7 +36,7 @@ public class CreateInputForPredictionsAlgWorker
 
         worker = new BackgroundWorker();
         worker.DoWork += worker_DoWork;
-        System.Timers.Timer timer = new System.Timers.Timer(30000);
+        System.Timers.Timer timer = new System.Timers.Timer(10000);
         timer.Elapsed += timer_Elapsed;
         timer.Start();
     }
@@ -50,16 +50,55 @@ public class CreateInputForPredictionsAlgWorker
     async void worker_DoWork(object sender, DoWorkEventArgs e)
     {
         //String finalFileName = $"{path}/results/Winner/Pareto";
-        List<EnergyMeasurements> energyMeasurements = new List<EnergyMeasurements>();
 
-        using (StreamWriter sw = new StreamWriter(path, false, new UTF8Encoding(true)))
+        // PART 1 - FILL UP ENERGY MEASUREMENTS LIST FROM DB
+        List<EnergyDataForPrediction> energyMeasurements = new List<EnergyDataForPrediction>();
+        List<Houses> houses = await db.Houses
+                            .AsNoTracking()
+                            .ToListAsync();
+
+        foreach (Houses house in houses)
+        {
+            /*
+            List<HouseAliases> houseAliases = await db.HouseAliases
+                            .Where(ha => ha.houseId == house.id && ha.ElectiAlias != null)
+                            .AsNoTracking()
+                            .ToListAsync();
+            string electiAlias = houseAliases.FirstOrDefault().ElectiAlias;
+            */
+
+            // Get all measurements for house, for today
+            List<EnergyMeasurements> measurements = await db.EnergyMeasurements
+                            .Where(m => m.houseId == house.id && m.measurementDatetime.DayOfYear == DateTime.Today.DayOfYear)
+                            .OrderBy(x => x.measurementDatetime)
+                            .AsNoTracking()
+                            .ToListAsync();
+            foreach (EnergyMeasurements measure in measurements)
+            {
+                if (measure != null)
+                {
+                    energyMeasurements.Add(new EnergyDataForPrediction
+                    {
+                        consumption = measure.consumption,
+                        production = measure.production,
+                        houseId = house.id.ToString(),
+                        measurementDatetime = measure.measurementDatetime,
+                    });
+                }
+            }
+        }
+
+        // PART 2 - FILL UP CSV AND SAVE
+        FileStream fileStream = new FileStream($"{path}/data/RE.csv", FileMode.Create);
+        //using (StreamWriter sw = new StreamWriter(path, false, new UTF8Encoding(true)))
+        using (StreamWriter sw = new StreamWriter(fileStream))
         using (CsvWriter cw = new CsvWriter(sw, CultureInfo.InvariantCulture))
         {
-            cw.WriteHeader<EnergyMeasurements>();
+            cw.WriteHeader<EnergyDataForPrediction>();
             cw.NextRecord();
-            foreach (EnergyMeasurements measurement in energyMeasurements)
+            foreach (EnergyDataForPrediction measurement in energyMeasurements)
             {
-                cw.WriteRecord<EnergyMeasurements>(measurement);
+                cw.WriteRecord(measurement);
                 cw.NextRecord();
             }
         }
