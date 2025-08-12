@@ -10,8 +10,9 @@ using Microsoft.AspNetCore.Hosting;
 using System.Globalization;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using System.Diagnostics;
+using Dynamo.Business.Models;
 
-namespace Dynamo.Business.Models;
+namespace Dynamo.Business.Workers;
 
 
 public class ReadFromPredictionsAlgWorker
@@ -27,11 +28,11 @@ public class ReadFromPredictionsAlgWorker
     private static string originPath;
     public ReadFromPredictionsAlgWorker(DynamoContext dbcontext, IWebHostEnvironment hostEnvironment)
     {
-        
+
         webHostEnvironment = hostEnvironment;
         path = webHostEnvironment.WebRootPath;
         originPath = webHostEnvironment.ContentRootPath;
-        
+
         db = dbcontext;
         using ILoggerFactory factory = LoggerFactory.Create(builder => builder.AddConsole());
         logger = factory.CreateLogger("Program");
@@ -52,7 +53,7 @@ public class ReadFromPredictionsAlgWorker
     async void worker_DoWork(object sender, DoWorkEventArgs e)
     {
         var filename = $"{path}/data/responsePredictions.csv";
-        if (!System.IO.File.Exists(filename))
+        if (!File.Exists(filename))
         {
             return;
         }
@@ -61,8 +62,8 @@ public class ReadFromPredictionsAlgWorker
         using (CsvReader cr = new CsvReader(sr, CultureInfo.InvariantCulture))
         {
             List<EnergyDataFromPrediction> dataFromPred = cr.GetRecords<EnergyDataFromPrediction>().ToList();
-           foreach (EnergyDataFromPrediction predictionData in dataFromPred)
-           {
+            foreach (EnergyDataFromPrediction predictionData in dataFromPred)
+            {
                 HouseAliases houseAlias = new HouseAliases();
                 houseAlias.MeasurementsAlias = predictionData.House_ID;
 

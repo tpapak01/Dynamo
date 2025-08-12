@@ -1,11 +1,12 @@
-﻿using Dynamo.Business.Data;
+﻿using Dynamo.Business.APIbodies;
+using Dynamo.Business.Data;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.ComponentModel;
 using System.Text;
 using System.Timers;
 
-namespace Dynamo.Business.Models;
+namespace Dynamo.Business.Workers;
 
 
 public class SendEnergyMeasurementsWorker
@@ -46,7 +47,7 @@ public class SendEnergyMeasurementsWorker
         List<Houses> houses = await db.Houses
                             .AsNoTracking()
                             .ToListAsync();
-        
+
         foreach (Houses house in houses)
         {
             List<HouseAliases> houseAliases = await db.HouseAliases

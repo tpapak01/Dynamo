@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Dynamo.Business.Models;
+namespace Dynamo.Business.APIbodies;
 
 
-public class EnergyPredictionBody
+public class EnergyDataElectiBody
 {
     [Required]
     public DateTime datetime { get; set; }
@@ -15,7 +15,7 @@ public class EnergyPredictionBody
     public float? forecasted_pv { get; set; }
 
     [Required]
-    public string houseId { get; set; }
+    public string houseid { get; set; }
 
 
 }

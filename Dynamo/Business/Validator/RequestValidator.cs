@@ -1,4 +1,4 @@
-﻿using Dynamo.Business.Models;
+﻿using Dynamo.Business.APIbodies;
 using FluentValidation;
 
 namespace Dynamo.Business.Validator;

@@ -1,17 +1,13 @@
 ﻿using Dynamo.Business.Data;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using System.ComponentModel;
-using System.Text;
 using System.Timers;
 using CsvHelper;
-using System.IO;
-using Microsoft.AspNetCore.Hosting;
 using System.Globalization;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using System.Diagnostics;
+using Dynamo.Business.Models;
 
-namespace Dynamo.Business.Models;
+namespace Dynamo.Business.Workers;
 
 
 public class CreateInputForPredictionsAlgWorker

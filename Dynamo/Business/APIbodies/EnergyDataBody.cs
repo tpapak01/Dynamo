@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Dynamo.Business.Models;
+namespace Dynamo.Business.APIbodies;
 
 
 public class EnergyDataBody
