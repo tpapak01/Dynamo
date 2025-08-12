@@ -56,7 +56,7 @@ namespace Dynamo.Business.Models
                     energyMeasurement.production = energyDataBody.production;
                     energyMeasurement.consumption = energyDataBody.consumption;
                     energyMeasurement.measurementDatetime = energyDataBody.measurementDatetime;
-                    energyMeasurement.houseId = houseAliases[0].id;
+                    energyMeasurement.houseId = houseAliases[0].houseId;
 
                     db.Add(energyMeasurement);
                 }

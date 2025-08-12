@@ -38,7 +38,7 @@ public class ReadFromPredictionsAlgWorker
 
         worker = new BackgroundWorker();
         worker.DoWork += worker_DoWork;
-        System.Timers.Timer timer = new System.Timers.Timer(10000);
+        System.Timers.Timer timer = new System.Timers.Timer(20000);
         timer.Elapsed += timer_Elapsed;
         timer.Start();
     }
@@ -51,7 +51,7 @@ public class ReadFromPredictionsAlgWorker
 
     async void worker_DoWork(object sender, DoWorkEventArgs e)
     {
-        var filename = $"{path}/data/RE.csv";
+        var filename = $"{path}/data/responsePredictions.csv";
         if (!System.IO.File.Exists(filename))
         {
             return;
@@ -60,11 +60,11 @@ public class ReadFromPredictionsAlgWorker
         using (StreamReader sr = new StreamReader(fileStream))
         using (CsvReader cr = new CsvReader(sr, CultureInfo.InvariantCulture))
         {
-            List<EnergyDataForPrediction> dataFromPred = cr.GetRecords<EnergyDataForPrediction>().ToList();
-           foreach (EnergyDataForPrediction predictionData in dataFromPred)
+            List<EnergyDataFromPrediction> dataFromPred = cr.GetRecords<EnergyDataFromPrediction>().ToList();
+           foreach (EnergyDataFromPrediction predictionData in dataFromPred)
            {
                 HouseAliases houseAlias = new HouseAliases();
-                houseAlias.MeasurementsAlias = predictionData.houseId;
+                houseAlias.MeasurementsAlias = predictionData.House_ID;
 
                 List<HouseAliases> houseAliases = await db.HouseAliases
                     .Where(h => h.MeasurementsAlias == houseAlias.MeasurementsAlias)
@@ -72,10 +72,10 @@ public class ReadFromPredictionsAlgWorker
                     .ToListAsync();
 
                 EnergyPredictions energyPrediction = new EnergyPredictions();
-                energyPrediction.production = predictionData.production;
-                energyPrediction.consumption = predictionData.consumption;
-                energyPrediction.predictionDatetime = predictionData.measurementDatetime;
-                energyPrediction.houseId = houseAliases[0].id;
+                energyPrediction.production = predictionData.Forecasted_PV;
+                energyPrediction.consumption = predictionData.Forecasted_Load_Consumption;
+                energyPrediction.predictionDatetime = predictionData.Datetime;
+                energyPrediction.houseId = houseAliases[0].houseId;
 
                 db.Add(energyPrediction);
             }

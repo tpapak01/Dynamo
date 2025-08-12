@@ -3,4 +3,3 @@ Dynamo/bin/*
 Dynamo/obj/*
 Dynamo/Properties/PublishProfiles/*
 Dynamo/Migrations/*
-Dynamo/wwwroot/data/*

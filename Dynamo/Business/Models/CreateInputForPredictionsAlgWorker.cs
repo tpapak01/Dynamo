@@ -90,7 +90,7 @@ public class CreateInputForPredictionsAlgWorker
         }
 
         // PART 2 - FILL UP CSV AND SAVE
-        FileStream fileStream = new FileStream($"{path}/data/RE.csv", FileMode.Create);
+        FileStream fileStream = new FileStream($"{path}/data/inputPredictions.csv", FileMode.Create);
         using (StreamWriter sw = new StreamWriter(fileStream))
         using (CsvWriter cw = new CsvWriter(sw, CultureInfo.InvariantCulture))
         {

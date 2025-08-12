@@ -40,6 +40,7 @@ public class SendEnergyMeasurementsWorker
         HttpClient httpClient = new HttpClient();
         httpClient.DefaultRequestHeaders.Add("x-api-key", "AAA");
         httpClient.BaseAddress = new Uri("https://localhost:7227/");
+        // TODO: replace body with EnergyDataElectiBody
         List<EnergyDataBody> model = new List<EnergyDataBody>();
 
         List<Houses> houses = await db.Houses
