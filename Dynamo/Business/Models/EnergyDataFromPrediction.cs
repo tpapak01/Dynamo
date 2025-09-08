@@ -16,6 +16,8 @@ public class EnergyDataFromPrediction
 
     public string House_ID { get; set; }
 
+    public float? Reliability_PV_24h { get; set; }
 
+    public float? Reliability_Load_24h { get; set; }
 
 }

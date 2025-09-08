@@ -52,6 +52,10 @@ namespace Dynamo.Business.MainCode
                         .Where(h => h.MeasurementsAlias == houseAlias.MeasurementsAlias)
                         .AsNoTracking() //fast fast
                         .ToListAsync();
+                    if (houseAliases == null || houseAliases.Count == 0)
+                    {
+                        return Results.NotFound("House Identifier not recognized.");
+                    }
 
                     EnergyMeasurements energyMeasurement = new EnergyMeasurements();
                     energyMeasurement.production = energyDataBody.production;
@@ -107,6 +111,8 @@ namespace Dynamo.Business.MainCode
                         energyPredictionBody.forecasted_pv = prediction.production;
                         energyPredictionBody.forecasted_load_consumption = prediction.consumption;
                         energyPredictionBody.datetime = prediction.predictionDatetime;
+                        energyPredictionBody.reliability_score_pv = prediction.reliabilityScoreProd;
+                        energyPredictionBody.reliability_score_load_consumption = prediction.reliabilityScoreCons;
                         energyPredictionBody.houseId = electiAlias;
 
                         energyPredictionBodyList.Add(energyPredictionBody);

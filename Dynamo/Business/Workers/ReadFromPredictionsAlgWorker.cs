@@ -52,7 +52,8 @@ public class ReadFromPredictionsAlgWorker
 
     async void worker_DoWork(object sender, DoWorkEventArgs e)
     {
-        var filename = $"{path}/data/responsePredictions.csv";
+        //var filename = $"{path}/data/responsePredictions.csv";
+        var filename = $"{originPath}/Forecast_day_ahead_ALL_HOUSES.csv";
         if (!File.Exists(filename))
         {
             return;
@@ -64,11 +65,10 @@ public class ReadFromPredictionsAlgWorker
             List<EnergyDataFromPrediction> dataFromPred = cr.GetRecords<EnergyDataFromPrediction>().ToList();
             foreach (EnergyDataFromPrediction predictionData in dataFromPred)
             {
-                HouseAliases houseAlias = new HouseAliases();
-                houseAlias.MeasurementsAlias = predictionData.House_ID;
+                String predictionsAlias = predictionData.House_ID;
 
                 List<HouseAliases> houseAliases = await db.HouseAliases
-                    .Where(h => h.MeasurementsAlias == houseAlias.MeasurementsAlias)
+                    .Where(h => h.PredictionsAlias == predictionsAlias)
                     .AsNoTracking() //fast fast
                     .ToListAsync();
 
@@ -76,6 +76,8 @@ public class ReadFromPredictionsAlgWorker
                 energyPrediction.production = predictionData.Forecasted_PV;
                 energyPrediction.consumption = predictionData.Forecasted_Load_Consumption;
                 energyPrediction.predictionDatetime = predictionData.Datetime;
+                energyPrediction.reliabilityScoreProd = predictionData.Reliability_PV_24h;
+                energyPrediction.reliabilityScoreCons = predictionData.Reliability_Load_24h;
                 energyPrediction.houseId = houseAliases[0].houseId;
 
                 db.Add(energyPrediction);

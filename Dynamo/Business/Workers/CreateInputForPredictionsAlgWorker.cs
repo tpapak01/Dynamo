@@ -66,7 +66,12 @@ public class CreateInputForPredictionsAlgWorker
 
             // Get all measurements for house, for today
             List<EnergyMeasurements> measurements = await db.EnergyMeasurements
-                            .Where(m => m.houseId == house.id && m.measurementDatetime.DayOfYear == DateTime.Today.DayOfYear)
+                            .Where(m => m.houseId == house.id && (
+                            m.measurementDatetime.DayOfYear == DateTime.Today.DayOfYear ||
+                            m.measurementDatetime.DayOfYear == DateTime.Today.DayOfYear -1 ||
+                            m.measurementDatetime.DayOfYear == DateTime.Today.DayOfYear -2 ||
+                            m.measurementDatetime.DayOfYear == DateTime.Today.DayOfYear -3)
+                            )
                             .OrderBy(x => x.measurementDatetime)
                             .AsNoTracking()
                             .ToListAsync();

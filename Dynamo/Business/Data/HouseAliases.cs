@@ -14,6 +14,8 @@ public class HouseAliases
 
     public string? MeasurementsAlias { get; set; }
 
+    public string? PredictionsAlias { get; set; }
+
     [Required]
     [ForeignKey("Houses")]
     public int houseId { get; set; }
