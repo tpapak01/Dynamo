@@ -45,8 +45,14 @@ public class CreateInputForPredictionsAlgWorker
             worker.RunWorkerAsync();
     }
 
+    Boolean stop = false;
     async void worker_DoWork(object sender, DoWorkEventArgs e)
     {
+        if (stop == true)
+        {
+            return;
+        }
+        stop = true;
         //String finalFileName = $"{path}/results/Winner/Pareto";
 
         // PART 1 - FILL UP ENERGY MEASUREMENTS LIST FROM DB
@@ -91,7 +97,7 @@ public class CreateInputForPredictionsAlgWorker
         }
 
         // PART 2 - FILL UP CSV AND SAVE
-        FileStream fileStream = new FileStream($"{originPath}/Combined_PV_Load_AllHouses.csv", FileMode.Create);
+        FileStream fileStream = new FileStream($"{path}/data/Combined_PV_Load_AllHouses.csv", FileMode.Create);
         using (StreamWriter sw = new StreamWriter(fileStream))
         using (CsvWriter cw = new CsvWriter(sw, CultureInfo.InvariantCulture))
         {
@@ -116,7 +122,7 @@ public class CreateInputForPredictionsAlgWorker
         //processInfo.Arguments = Command;
         //ProcessInfo.RedirectStandardOutput = true;
         processInfo.FileName = "cmd.exe";
-        processInfo.Arguments = $"/k {originPath}/hello.bat";
+        processInfo.Arguments = $"/k {path}/data/hello.bat";
 
         process.StartInfo = processInfo;
         process.Start();

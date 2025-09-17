@@ -50,10 +50,16 @@ public class ReadFromPredictionsAlgWorker
             worker.RunWorkerAsync();
     }
 
+    Boolean stop = false;
     async void worker_DoWork(object sender, DoWorkEventArgs e)
     {
+        if (stop == true)
+        {
+            return;
+        }
+        stop = true;
         //var filename = $"{path}/data/responsePredictions.csv";
-        var filename = $"{originPath}/Forecast_day_ahead_ALL_HOUSES.csv";
+        var filename = $"{path}/data/Forecast_day_ahead_ALL_HOUSES.csv";
         if (!File.Exists(filename))
         {
             return;

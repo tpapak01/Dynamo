@@ -35,8 +35,15 @@ public class SendEnergyMeasurementsWorker
             worker.RunWorkerAsync();
     }
 
+    Boolean stop = false;
     async void worker_DoWork(object sender, DoWorkEventArgs e)
     {
+        if (stop == true)
+        {
+            return;
+        }
+        stop = true;
+
         //logger.LogInformation("Hmmm...");
         HttpClient httpClient = new HttpClient();
         httpClient.DefaultRequestHeaders.Add("x-api-key", "AAA");
