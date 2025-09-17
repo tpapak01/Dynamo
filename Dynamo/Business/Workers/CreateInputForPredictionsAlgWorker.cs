@@ -59,12 +59,12 @@ public class CreateInputForPredictionsAlgWorker
         {
             
             List<HouseAliases> houseAliases = await db.HouseAliases
-                            .Where(ha => ha.houseId == house.id && ha.MeasurementsAlias != null)
+                            .Where(ha => ha.houseId == house.id && ha.PredictionsAlias != null)
                             .AsNoTracking()
                             .ToListAsync();
-            string measurementsAlias = houseAliases.FirstOrDefault().MeasurementsAlias;
+            string predictionsAlias = houseAliases.FirstOrDefault().PredictionsAlias;
 
-            // Get all measurements for house, for today
+            // Get all measurements for house, for last 4 days
             List<EnergyMeasurements> measurements = await db.EnergyMeasurements
                             .Where(m => m.houseId == house.id && (
                             m.measurementDatetime.DayOfYear == DateTime.Today.DayOfYear ||
@@ -83,15 +83,15 @@ public class CreateInputForPredictionsAlgWorker
                     {
                         consumption = measure.consumption,
                         production = measure.production,
-                        houseId = measurementsAlias,
-                        measurementDatetime = measure.measurementDatetime,
+                        houseId = predictionsAlias,
+                        Datetime = measure.measurementDatetime,
                     });
                 }
             }
         }
 
         // PART 2 - FILL UP CSV AND SAVE
-        FileStream fileStream = new FileStream($"{path}/data/inputPredictions.csv", FileMode.Create);
+        FileStream fileStream = new FileStream($"{originPath}/Combined_PV_Load_AllHouses.csv", FileMode.Create);
         using (StreamWriter sw = new StreamWriter(fileStream))
         using (CsvWriter cw = new CsvWriter(sw, CultureInfo.InvariantCulture))
         {

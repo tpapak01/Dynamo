@@ -7,7 +7,7 @@ namespace Dynamo.Business.Models;
 public class EnergyDataForPrediction
 {
     
-    public DateTime measurementDatetime { get; set; }
+    public DateTime Datetime { get; set; }
 
 
     public float? consumption { get; set; }
