@@ -52,7 +52,22 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddScoped<IValidator<List<EnergyDataBody>>, RequestValidator>();
 
+var MyAllowSpecificOrigins = "AllowAllOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+            policyBuilder => policyBuilder.AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowAnyOrigin()
+                //.AllowCredentials()
+                .SetIsOriginAllowed(_ => true)
+        );
+});
+
+
 var app = builder.Build();
+
+app.UseCors(MyAllowSpecificOrigins);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -62,7 +77,7 @@ if (app.Environment.IsDevelopment())
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseMiddleware<ApiKeyAuthMiddleware>();
 

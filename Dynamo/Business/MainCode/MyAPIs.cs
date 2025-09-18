@@ -69,7 +69,8 @@ namespace Dynamo.Business.MainCode
                 return Results.Created($"{url}", energyDataBodyList);
             })
             .WithName("energydata")
-            .WithOpenApi();
+            .WithOpenApi()
+            .RequireCors("AllowAllOrigins");
 
         }
 
@@ -121,7 +122,8 @@ namespace Dynamo.Business.MainCode
                 return Results.Created($"{url}", energyPredictionBodyList);
             })
             .WithName("energypredictions")
-            .WithOpenApi();
+            .WithOpenApi()
+            .RequireCors("AllowAllOrigins");
 
         }
     }
